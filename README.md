@@ -1,6 +1,6 @@
 # conveyance-bacterium
 
-A composable-set library for [Conveyance](https://github.com/HereLiesAz/Conveyance): Concept not yet defined.
+A composable-set library for [Conveyance](https://github.com/HereLiesAz/Conveyance): the Bacterium style -- shape, movement, and interaction modeled on single-celled organisms. An element's form is a motile cell body (pseudopod extension, ciliary/flagellar undulation); its interaction verbs come straight from cell biology -- reproduction (an element dividing in two, mitosis-style) and eating (one element engulfing a smaller one, phagocytosis-style).
 
 ## What this is
 
@@ -35,7 +35,7 @@ Example composable manifest referencing this library, once it has a real templat
 
 ## Status
 
-Scaffold only, plumbing-first -- the design concept for this set hasn't been defined yet, so `Templates.kt` is an empty registry with nothing to register against.
+Scaffold only. The concept -- cell-shape motion, plus division and engulfment as interaction verbs -- is set; no `templateId` or token vocabulary has been designed yet.
 
 ## Using it
 
