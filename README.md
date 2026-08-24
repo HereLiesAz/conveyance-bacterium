@@ -60,7 +60,18 @@ Example composable manifest referencing this library:
     `Consequence.Create` read literally: one subject becoming two *is* mitosis.
   - `bacterium.cell.eat` -- the cup dent closes over the first half of `ActScope.yielding`'s
     progress, then a second, smaller circle (the vacuole) fades in and migrates from the rim
-    toward the center over the second half, settling fully inside at `Settled`.
+    toward the center over the second half, settling fully inside at `Settled`. Self-contained --
+    one cell miming engulfment, not an actual predator consuming a separate prey; see
+    `PredatorColony` below for that.
+- **`PredatorColony`/`PreyRequest`** (`Colony.kt`) -- genuine two-body predator/prey, built on
+  Conveyance's own `Collection` primitive: a predator (`IdleCell`) alongside a real population of
+  independently addressed prey, each carrying its own `Act`. Eating one is the host removing its
+  `SubjectId` from the `prey` list it passes in; `Collection` renders the framework's own Ghost
+  residue for it. **Not** a `Templates.registry` entry, for the same reason `conveyance-h2g2`'s
+  `H2g2Page` isn't: every composable manifest element carries exactly one `act`
+  (azphalt `spec/composable.md`), and `Collection` inherently needs a caller-owned list of items
+  each with its *own* act -- a shape the single-element `ComposableRequest` can't express. A host
+  wires this up directly.
 
 Like `conveyance-liquid`, `scale` sizes an optional caption beside the cell rather than text baked
 into it -- a label inside a cell body breaks the biological read the same way it would for a
@@ -68,11 +79,12 @@ droplet.
 
 ## Status
 
-A first real slice, not a finished set. All three named aspects of the concept -- shape/movement,
-reproduction, eating -- have at least one working template, but each is a single style: no
-predator-vs-prey as two independently addressed elements (the eating template is one
-self-contained composable, not an actual two-body engulfment), and mitosis always produces two
-equal lobes rather than the population growth a colony of cells would need.
+All three named aspects of the concept -- shape/movement, reproduction, eating -- now have both a
+single-cell template *and*, for eating, a genuine two-body version (`PredatorColony`). What's
+still not here: mitosis always produces two equal lobes rather than the unequal-division/growth a
+real colony needs, and `PredatorColony`'s `reproduce` act only ever adds prey -- there's no
+predator-side reproduction (a predator itself dividing after eating enough), which is the natural
+next link between `bacterium.cell.divide` and `PredatorColony`.
 
 ## Using it
 

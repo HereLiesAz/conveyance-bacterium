@@ -138,11 +138,17 @@ fun DividingCell(request: ComposableRequest) {
 private const val CUP_ANGLE = 0f
 
 /**
- * Phagocytosis: the membrane forms an inward cup ([CellShape.dentAngle]/`dentStrength`) that
- * closes around engulfed material, which then settles inward as a food vacuole -- a second,
- * smaller circle drawn over the cell body, moving from the rim toward the center as `engulf`
- * rises. Driven the same way as [DividingCell]: [ActState.Yielding]'s progress while the cup is
- * closing, [ActState.Settled] meaning the vacuole is safely inside.
+ * Phagocytosis, self-contained: the membrane forms an inward cup ([CellShape.dentAngle]/
+ * `dentStrength`) that closes around engulfed material, which then settles inward as a food
+ * vacuole -- a second, smaller circle drawn over the cell body, moving from the rim toward the
+ * center as `engulf` rises. Driven the same way as [DividingCell]: [ActState.Yielding]'s progress
+ * while the cup is closing, [ActState.Settled] meaning the vacuole is safely inside.
+ *
+ * This is one cell miming engulfment on its own, not an actual predator consuming a separately
+ * addressed prey -- for that, see [PredatorColony] (`Colony.kt`), which uses Conveyance's real
+ * `Collection` primitive for genuine two-body predator/prey; it isn't a [Templates.registry]
+ * entry because [Collection] needs a caller-owned list of per-item acts, a shape a single
+ * `ComposableRequest` can't express.
  */
 @Composable
 fun EatingCell(request: ComposableRequest) {
