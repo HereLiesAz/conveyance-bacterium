@@ -15,6 +15,8 @@ import com.hereliesaz.conveyance.compose.ActScope
 import com.hereliesaz.conveyance.compose.Collection
 import com.hereliesaz.conveyance.compose.Offer
 
+private val PREY_DIAMETER = 20.dp
+
 /**
  * One prey cell in a [PredatorColony] -- unlike [ComposableRequest], this carries its **own**
  * [act], since [Collection] needs every item independently addressable. [act]'s consequence is
@@ -72,15 +74,23 @@ private fun ActScope.SpawnControl() {
     )
 }
 
-/** A single prey cell's chrome -- small, undifferentiated, [Offer]-backed by its own [PreyRequest.act]. */
+/**
+ * A single prey cell's chrome -- small, undifferentiated, [Offer]-backed by its own
+ * [PreyRequest.act]. Jitters via [rememberBrownianJitter] like every other cell in this library --
+ * prey are real single-celled organisms too, and smaller ones jitter *more* per the real
+ * Einstein-Stokes relation ([jitterAmplitudePxFor]), so a prey blob trembles more than the
+ * predator looming over it.
+ */
 @Composable
 private fun PreyBlob(prey: PreyRequest) {
     val tint = BacteriumHue.of(prey.hue)
+    val jitter = rememberBrownianJitter(jitterAmplitudePxFor(PREY_DIAMETER))
     Offer(act = prey.act) {
         Box(
             modifier = Modifier
                 .padding(2.dp)
-                .size(20.dp)
+                .size(PREY_DIAMETER)
+                .brownianJitter(jitter)
                 .clip(CellShape(pseudopodPhase = 0f, pseudopodStrength = 0.15f))
                 .background(tint.base),
         )

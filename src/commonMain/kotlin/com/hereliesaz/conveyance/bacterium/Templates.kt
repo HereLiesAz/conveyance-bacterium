@@ -78,7 +78,13 @@ private fun captionStyleFor(scale: String): TextStyle = when (scale) {
     else -> TextStyle(fontSize = 14.sp)
 }
 
-/** A continuously crawling cell -- [CellShape]'s pseudopod phase drives from a slow, repeating animation, not a one-shot effect, since a living cell never actually holds still. */
+/**
+ * A continuously crawling cell -- [CellShape]'s pseudopod phase drives from a slow, repeating
+ * animation, not a one-shot effect, since a living cell never actually holds still. On top of
+ * that deliberate crawl, [rememberBrownianJitter] shakes the whole body -- real Brownian motion,
+ * the thermal jitter any real single-celled organism shows constantly, not just while it happens
+ * to be moving somewhere.
+ */
 @Composable
 fun IdleCell(request: ComposableRequest) {
     val tint = BacteriumHue.of(request.hue)
@@ -90,11 +96,13 @@ fun IdleCell(request: ComposableRequest) {
         animationSpec = infiniteRepeatable(tween(style.cycleMillis, easing = LinearEasing)),
         label = "phase",
     )
+    val jitter = rememberBrownianJitter(jitterAmplitudePxFor(style.diameter))
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Offer(act = request.act) {
             Box(
                 modifier = Modifier
                     .size(style.diameter)
+                    .brownianJitter(jitter)
                     .clip(CellShape(pseudopodPhase = phase, pseudopodStrength = style.pseudopodStrength))
                     .background(tint.base),
             )
@@ -109,12 +117,14 @@ fun IdleCell(request: ComposableRequest) {
  * Binary fission, driven by the act's own state -- [ActState.Yielding]'s live progress
  * (`ActScope.yielding`) narrows the cleavage furrow; the act settling means division is complete.
  * This is [com.hereliesaz.conveyance.Consequence.Create] read literally: one subject becoming
- * two is what mitosis *is*.
+ * two is what mitosis *is*. [rememberBrownianJitter] keeps the whole (still-merged-or-splitting)
+ * body trembling throughout, same as [IdleCell].
  */
 @Composable
 fun DividingCell(request: ComposableRequest) {
     val tint = BacteriumHue.of(request.hue)
     val style = Locomotion.of(request.surface)
+    val jitter = rememberBrownianJitter(jitterAmplitudePxFor(style.diameter))
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Offer(act = request.act) {
             val separation = when (state) {
@@ -125,6 +135,7 @@ fun DividingCell(request: ComposableRequest) {
             Box(
                 modifier = Modifier
                     .size(style.diameter * 1.4f)
+                    .brownianJitter(jitter)
                     .clip(MitosisShape(separation = separation))
                     .background(tint.base),
             )
@@ -148,12 +159,14 @@ private const val CUP_ANGLE = 0f
  * addressed prey -- for that, see [PredatorColony] (`Colony.kt`), which uses Conveyance's real
  * `Collection` primitive for genuine two-body predator/prey; it isn't a [Templates.registry]
  * entry because [Collection] needs a caller-owned list of per-item acts, a shape a single
- * `ComposableRequest` can't express.
+ * `ComposableRequest` can't express. [rememberBrownianJitter] keeps the whole body (cup and
+ * vacuole together, as one physical unit) trembling throughout, same as [IdleCell].
  */
 @Composable
 fun EatingCell(request: ComposableRequest) {
     val tint = BacteriumHue.of(request.hue)
     val style = Locomotion.of(request.surface)
+    val jitter = rememberBrownianJitter(jitterAmplitudePxFor(style.diameter))
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Offer(act = request.act) {
             val engulf = when (state) {
@@ -167,7 +180,7 @@ fun EatingCell(request: ComposableRequest) {
             val vacuoleProgress = ((engulf - 0.3f) / 0.7f).coerceIn(0f, 1f)
 
             Box(
-                modifier = Modifier.size(style.diameter),
+                modifier = Modifier.size(style.diameter).brownianJitter(jitter),
                 contentAlignment = Alignment.Center,
             ) {
                 Box(

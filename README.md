@@ -41,6 +41,14 @@ Example composable manifest referencing this library:
   crawling -- cytoplasm extends toward the front, the rear lags and follows. The same class also
   carves an *inward* Gaussian dent (`dentAngle`/`dentStrength`) -- the phagocytic cup a membrane
   forms while wrapping around something it's engulfing.
+- **`rememberBrownianJitter`/`jitterAmplitudePxFor`** (`Brownian.kt`) -- real Brownian motion: a
+  single-celled organism never actually holds still, even set apart from its own locomotion --
+  thermal collision from the surrounding fluid keeps it trembling randomly the whole time. A
+  cheap random walk (re-targets to a new random point every 80-180ms, linear interpolation
+  between them) stands in for true noise. Amplitude scales *inversely* with cell diameter, per
+  the real Einstein-Stokes relation -- a smaller particle is displaced more by the same molecular
+  bombardment, not less, so prey cells in `PredatorColony` visibly tremble more than the predator
+  looming over them. Applied to every template in this library.
 - **`MitosisShape`** (`MitosisShape.kt`) -- binary fission's outline: two circular lobes whose
   centers separate as `separation` goes 0→1, connected by a shrinking rectangular neck while
   they're still close -- the cleavage furrow pinching the cytoplasm in two.
