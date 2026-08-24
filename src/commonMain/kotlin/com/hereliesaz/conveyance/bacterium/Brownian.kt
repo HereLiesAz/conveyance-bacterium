@@ -48,7 +48,9 @@ private const val REFERENCE_JITTER_DP = 2.5f
  * How far, in pixels, a cell of [diameter] should jitter -- inversely proportional to size, per
  * the real Einstein-Stokes relation: a smaller particle suspended in fluid is displaced *more* by
  * the same molecular bombardment, not less. [REFERENCE_JITTER_DP] is calibrated against
- * [REFERENCE_DIAMETER] (roughly `Locomotion.amoeba`'s own diameter).
+ * [REFERENCE_DIAMETER] (exactly `Locomotion.paramecium`'s own diameter, the middle of this
+ * library's three locomotion sizes -- `amoeba` is 56dp, `flagellate` 44dp -- so both the largest
+ * and smallest styles jitter more/less than this reference rather than one end always winning).
  */
 @Composable
 internal fun jitterAmplitudePxFor(diameter: Dp): Float {

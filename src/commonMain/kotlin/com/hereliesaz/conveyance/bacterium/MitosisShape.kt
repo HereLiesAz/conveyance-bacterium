@@ -11,6 +11,11 @@ import androidx.compose.ui.unit.LayoutDirection
 
 private const val NECK_VISIBLE_UNTIL = 0.6f
 
+/** See [MitosisShape]'s own KDoc: solved together with [MAX_CENTER_OFFSET_RATIO] so neither lobe
+ *  ever paints outside the shape's box, worst case included. */
+private const val LOBE_RADIUS_RATIO = 0.45f
+private const val MAX_CENTER_OFFSET_RATIO = 0.19f
+
 /**
  * Binary fission's outline: two circular lobes whose centers separate as [separation] goes 0→1,
  * connected by a shrinking rectangular neck while they're still close -- the cleavage furrow
@@ -24,14 +29,21 @@ private const val NECK_VISIBLE_UNTIL = 0.6f
  * the other is smaller and differentiates). At `asymmetry = 0` both lobes read identically to the
  * un-asymmetric shape this class always drew; higher values grow the first lobe slightly past
  * even and shrink the second toward a bud.
+ *
+ * [LOBE_RADIUS_RATIO]/[MAX_CENTER_OFFSET_RATIO] are chosen so neither lobe's outer edge ever
+ * paints outside this shape's own `size` box, for every [separation]/[asymmetry] combination in
+ * `0..1` -- the worst case is the larger lobe at `separation = 1, asymmetry = 1`
+ * (`motherRadius = lobeRadius * 1.3`), which the two ratios are solved to keep inside the box with
+ * a small margin, not just for the one asymmetry value ([BUD_ASYMMETRY] in `Templates.kt`) this
+ * library's own templates happen to use today.
  */
 class MitosisShape(private val separation: Float, private val asymmetry: Float = 0f) : Shape {
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val cx = size.width / 2f
         val cy = size.height / 2f
         val mergedRadius = minOf(size.width, size.height) / 2f
-        val lobeRadius = mergedRadius * 0.66f
-        val maxCenterOffset = size.width * 0.28f
+        val lobeRadius = mergedRadius * LOBE_RADIUS_RATIO
+        val maxCenterOffset = size.width * MAX_CENTER_OFFSET_RATIO
 
         val t = separation.coerceIn(0f, 1f)
         val asym = asymmetry.coerceIn(0f, 1f)

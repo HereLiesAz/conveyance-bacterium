@@ -26,6 +26,10 @@ object BacteriumHue {
         "coral" -> coral
         "violet" -> violet
         "slate" -> slate
-        else -> named[(if (hue.hashCode() < 0) -hue.hashCode() else hue.hashCode()) % named.size]
+        // Kotlin's Int.MIN_VALUE has no positive two's-complement negation (-Int.MIN_VALUE
+        // overflows back to itself), so a naive "negate if negative" can still hand `%` a
+        // negative dividend and throw IndexOutOfBoundsException. `mod` (not `%`) always returns
+        // a non-negative result for a positive divisor, sidestepping that entirely.
+        else -> named[hue.hashCode().mod(named.size)]
     }
 }

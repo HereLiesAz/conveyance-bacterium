@@ -104,6 +104,23 @@ population-scale colony (many predators and prey sharing one `Collection`, rathe
 predator against a prey list), and `bacterium.cell.bud`'s asymmetry (0.6) is a fixed constant --
 nothing in the composable manifest's vocabulary names a variable asymmetry per element.
 
+An adversarial audit found and this repo has since fixed five real defects, beyond the
+already-known missing click wiring (every template, plus `PredatorColony`'s `SpawnControl`/
+`PreyBlob`, now attach `Modifier.tell(owesTell, weight).clickable { engage() }`, matching
+`conveyance-demo/.../Gallery.kt`'s own wiring): `MitosisShape`'s lobe/offset constants painted
+outside the shape's own box at high separation and asymmetry (up to 21% past the edge, worst case)
+-- both constants are now solved together so neither lobe ever exceeds the box across the full
+`0..1` range of either parameter. `PredatorColony`'s eaten-count tracked `prey.size` alone, so an
+eat and a simultaneous reproduce (both landing in the same recomposition) cancelled out and the
+eat went uncounted; a burst of more than `divideAfterEaten` eaten at once discarded the remainder
+instead of carrying it forward; and a second division earned while the first was still displaying
+was silently dropped rather than queued (`mutableStateOf(true)` written while already `true` is a
+no-op, so the display-timer effect never restarted). Consumption is now tracked by the actual set
+of subjects present rather than a size delta, every division a burst earns is queued rather than
+lost, and each queued division gets its own full display window. `bacterium.cell.eat`'s cup-dent
+and vacuole windows overlapped for 20% of the engulf range, contradicting its own "cup closes,
+then vacuole appears" doc comment -- both now share the same 0.5 boundary.
+
 ## Using it
 
 ```kotlin

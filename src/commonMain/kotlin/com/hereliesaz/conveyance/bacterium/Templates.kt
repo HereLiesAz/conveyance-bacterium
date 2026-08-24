@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
@@ -24,8 +25,14 @@ import androidx.compose.ui.unit.sp
 import com.hereliesaz.conveyance.Act
 import com.hereliesaz.conveyance.ActState
 import com.hereliesaz.conveyance.compose.Offer
+import com.hereliesaz.conveyance.compose.tell
 import kotlin.math.cos
 import kotlin.math.sin
+
+// Every template attaches Modifier.tell(owesTell, weight).clickable { engage() } to its outermost
+// shape -- the wiring Conveyance's own demo (conveyance-demo/.../Gallery.kt) uses at every real
+// Offer call site. Without it a template still renders correctly but is inert: nothing engages
+// the act on tap, so ActState can never leave Ready through this template alone.
 
 /**
  * What a `kind: "composable"` `.azp` package's `elements[]` entry (azphalt `spec/composable.md`)
@@ -102,6 +109,8 @@ fun IdleCell(request: ComposableRequest) {
         Offer(act = request.act) {
             Box(
                 modifier = Modifier
+                    .tell(owesTell, weight)
+                    .clickable { engage() }
                     .size(style.diameter)
                     .brownianJitter(jitter)
                     .clip(CellShape(pseudopodPhase = phase, pseudopodStrength = style.pseudopodStrength))
@@ -154,6 +163,8 @@ private fun DivisionCell(request: ComposableRequest, asymmetry: Float) {
             }
             Box(
                 modifier = Modifier
+                    .tell(owesTell, weight)
+                    .clickable { engage() }
                     .size(style.diameter * 1.4f)
                     .brownianJitter(jitter)
                     .clip(MitosisShape(separation = separation, asymmetry = asymmetry))
@@ -196,8 +207,11 @@ fun EatingCell(request: ComposableRequest) {
             }
             // The cup is only open (dent visible) for the first half of engulfment; past that
             // the membrane has already sealed and only the vacuole's inward migration continues.
+            // The two ranges share the exact same 0.5 boundary -- rather than the dent's own
+            // [0, 0.5) against a vacuole starting early at 0.3 -- so the cup is fully sealed
+            // before the vacuole is ever drawn, matching this function's own "then" sequencing.
             val dentStrength = (0.5f - engulf).coerceIn(0f, 0.5f) * 2f * 0.4f
-            val vacuoleProgress = ((engulf - 0.3f) / 0.7f).coerceIn(0f, 1f)
+            val vacuoleProgress = ((engulf - 0.5f) / 0.5f).coerceIn(0f, 1f)
 
             Box(
                 modifier = Modifier.size(style.diameter).brownianJitter(jitter),
@@ -205,6 +219,8 @@ fun EatingCell(request: ComposableRequest) {
             ) {
                 Box(
                     modifier = Modifier
+                        .tell(owesTell, weight)
+                        .clickable { engage() }
                         .size(style.diameter)
                         .clip(
                             CellShape(
