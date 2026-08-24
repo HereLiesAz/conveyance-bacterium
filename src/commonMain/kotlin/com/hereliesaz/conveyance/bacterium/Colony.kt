@@ -6,6 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -14,8 +20,11 @@ import com.hereliesaz.conveyance.SubjectId
 import com.hereliesaz.conveyance.compose.ActScope
 import com.hereliesaz.conveyance.compose.Collection
 import com.hereliesaz.conveyance.compose.Offer
+import kotlinx.coroutines.delay
 
 private val PREY_DIAMETER = 20.dp
+private const val DEFAULT_DIVIDE_AFTER_EATEN = 3
+private const val DIVIDE_DISPLAY_MILLIS = 1200L
 
 /**
  * One prey cell in a [PredatorColony] -- unlike [ComposableRequest], this carries its **own**
@@ -42,6 +51,15 @@ data class PreyRequest(
  * element carries exactly one `act` (azphalt `spec/composable.md`), and [Collection] inherently
  * needs a caller-owned list of items each with its *own* act -- a shape this library's
  * single-element [ComposableRequest] can't express. A host wires this up directly.
+ *
+ * The predator itself reacts to eating: consuming [divideAfterEaten] prey (detected as [prey]
+ * shrinking across recompositions -- this library never removes anything itself, so it can only
+ * ever *observe* a shrink the host already made) switches the predator's own rendering from
+ * [IdleCell] to [BuddingCell] for [DIVIDE_DISPLAY_MILLIS], the real link between eating and
+ * reproduction -- consumed biomass has to go somewhere, and division is where it goes. This
+ * changes only which of this library's own composables draws the *one* predator element; the
+ * predator's own [Act]/address never changes; the choice is driven by data the host already
+ * supplies via [prey], not by moving anything.
  */
 @Composable
 fun PredatorColony(
@@ -50,9 +68,35 @@ fun PredatorColony(
     /** Spawns a new prey cell -- [Collection]'s own required "where new things come from" control. */
     reproduce: Act,
     modifier: Modifier = Modifier,
+    divideAfterEaten: Int = DEFAULT_DIVIDE_AFTER_EATEN,
 ) {
+    var previousPreyCount by remember { mutableIntStateOf(prey.size) }
+    var eatenSinceDivide by remember { mutableIntStateOf(0) }
+    var dividing by remember { mutableStateOf(false) }
+
+    LaunchedEffect(prey.size) {
+        val consumed = (previousPreyCount - prey.size).coerceAtLeast(0)
+        previousPreyCount = prey.size
+        if (consumed > 0) {
+            eatenSinceDivide += consumed
+            if (eatenSinceDivide >= divideAfterEaten) {
+                eatenSinceDivide = 0
+                dividing = true
+            }
+        }
+    }
+    // A separate effect keyed on `dividing`, not `prey.size` -- a LaunchedEffect restarts (and
+    // cancels any delay in flight) whenever its key changes, so tying the display timer to
+    // prey.size would leave `dividing` stuck true forever if another prey were eaten mid-display.
+    LaunchedEffect(dividing) {
+        if (dividing) {
+            delay(DIVIDE_DISPLAY_MILLIS)
+            dividing = false
+        }
+    }
+
     Column {
-        IdleCell(predator)
+        if (dividing) BuddingCell(predator) else IdleCell(predator)
         Collection(
             items = prey,
             creator = reproduce,

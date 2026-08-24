@@ -51,7 +51,10 @@ Example composable manifest referencing this library:
   looming over them. Applied to every template in this library.
 - **`MitosisShape`** (`MitosisShape.kt`) -- binary fission's outline: two circular lobes whose
   centers separate as `separation` goes 0→1, connected by a shrinking rectangular neck while
-  they're still close -- the cleavage furrow pinching the cytoplasm in two.
+  they're still close -- the cleavage furrow pinching the cytoplasm in two. `asymmetry` (0..1,
+  default 0) makes the split uneven -- real budding yeast buds off a visibly smaller daughter,
+  and many stem cell divisions are deliberately asymmetric -- strictly generalizing the even
+  split rather than a separate code path (`asymmetry = 0` reproduces the original shape exactly).
 - **`BacteriumHue`** (`BacteriumHue.kt`) -- five translucent cytoplasm tints, each a `base`/
   `nucleus` pair (the second used for the vacuole in the eating template) -- semi-transparent, not
   the opaque fills `conveyance-h2g2`/`conveyance-expressive` use, since a real membrane reads as
@@ -60,26 +63,33 @@ Example composable manifest referencing this library:
   `flagellate`) tune pseudopod strength and animation cycle speed differently -- a blunt slow
   pseudopod, a gentler faster ciliary wobble, and a sharp fast flagellar bulge, per the movement
   styles the concept named.
-- **`Templates`** (`Templates.kt`) -- three templates:
+- **`Templates`** (`Templates.kt`) -- four templates:
   - `bacterium.cell.idle` -- continuously crawling, driven by a slow repeating animation (a real
     cell never actually holds still).
   - `bacterium.cell.divide` -- `MitosisShape`'s `separation` tracks `ActScope.yielding`'s live
-    progress while the act is `ActState.Yielding`, reaching 1 at `Settled`. This is
-    `Consequence.Create` read literally: one subject becoming two *is* mitosis.
+    progress while the act is `ActState.Yielding`, reaching 1 at `Settled`; an even split. This
+    is `Consequence.Create` read literally: one subject becoming two *is* mitosis.
+  - `bacterium.cell.bud` -- the same act-state machinery as `bacterium.cell.divide`, at
+    `MitosisShape.asymmetry = 0.6` -- a real unequal division (budding yeast, asymmetric stem
+    cell division) rather than every split being two equal halves.
   - `bacterium.cell.eat` -- the cup dent closes over the first half of `ActScope.yielding`'s
     progress, then a second, smaller circle (the vacuole) fades in and migrates from the rim
     toward the center over the second half, settling fully inside at `Settled`. Self-contained --
     one cell miming engulfment, not an actual predator consuming a separate prey; see
     `PredatorColony` below for that.
 - **`PredatorColony`/`PreyRequest`** (`Colony.kt`) -- genuine two-body predator/prey, built on
-  Conveyance's own `Collection` primitive: a predator (`IdleCell`) alongside a real population of
-  independently addressed prey, each carrying its own `Act`. Eating one is the host removing its
-  `SubjectId` from the `prey` list it passes in; `Collection` renders the framework's own Ghost
-  residue for it. **Not** a `Templates.registry` entry, for the same reason `conveyance-h2g2`'s
-  `H2g2Page` isn't: every composable manifest element carries exactly one `act`
-  (azphalt `spec/composable.md`), and `Collection` inherently needs a caller-owned list of items
-  each with its *own* act -- a shape the single-element `ComposableRequest` can't express. A host
-  wires this up directly.
+  Conveyance's own `Collection` primitive: a predator alongside a real population of independently
+  addressed prey, each carrying its own `Act`. Eating one is the host removing its `SubjectId`
+  from the `prey` list it passes in; `Collection` renders the framework's own Ghost residue for
+  it. The predator itself reacts to eating: consuming `divideAfterEaten` (default 3) prey --
+  detected as `prey` shrinking across recompositions, since this library never removes anything
+  itself -- switches the predator's own rendering from `IdleCell` to `bacterium.cell.bud`'s
+  `BuddingCell` for 1.2s, the real link between eating and reproduction: consumed biomass has to
+  go somewhere, and division is where it goes. **Not** a `Templates.registry` entry, for the same
+  reason `conveyance-h2g2`'s `H2g2Page` isn't: every composable manifest element carries exactly
+  one `act` (azphalt `spec/composable.md`), and `Collection` inherently needs a caller-owned list
+  of items each with its *own* act -- a shape the single-element `ComposableRequest` can't
+  express. A host wires this up directly.
 
 Like `conveyance-liquid`, `scale` sizes an optional caption beside the cell rather than text baked
 into it -- a label inside a cell body breaks the biological read the same way it would for a
@@ -88,11 +98,11 @@ droplet.
 ## Status
 
 All three named aspects of the concept -- shape/movement, reproduction, eating -- now have both a
-single-cell template *and*, for eating, a genuine two-body version (`PredatorColony`). What's
-still not here: mitosis always produces two equal lobes rather than the unequal-division/growth a
-real colony needs, and `PredatorColony`'s `reproduce` act only ever adds prey -- there's no
-predator-side reproduction (a predator itself dividing after eating enough), which is the natural
-next link between `bacterium.cell.divide` and `PredatorColony`.
+single-cell template and, for reproduction and eating, a version that reacts to real state
+(asymmetric budding, and a predator that divides after eating enough). What's still not here: a
+population-scale colony (many predators and prey sharing one `Collection`, rather than one
+predator against a prey list), and `bacterium.cell.bud`'s asymmetry (0.6) is a fixed constant --
+nothing in the composable manifest's vocabulary names a variable asymmetry per element.
 
 ## Using it
 

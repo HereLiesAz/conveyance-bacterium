@@ -68,6 +68,7 @@ object Templates {
     val registry: Map<String, @Composable (ComposableRequest) -> Unit> = mapOf(
         "bacterium.cell.idle" to { request -> IdleCell(request) },
         "bacterium.cell.divide" to { request -> DividingCell(request) },
+        "bacterium.cell.bud" to { request -> BuddingCell(request) },
         "bacterium.cell.eat" to { request -> EatingCell(request) },
     )
 }
@@ -113,15 +114,34 @@ fun IdleCell(request: ComposableRequest) {
     }
 }
 
+private const val BUD_ASYMMETRY = 0.6f
+
 /**
  * Binary fission, driven by the act's own state -- [ActState.Yielding]'s live progress
  * (`ActScope.yielding`) narrows the cleavage furrow; the act settling means division is complete.
  * This is [com.hereliesaz.conveyance.Consequence.Create] read literally: one subject becoming
- * two is what mitosis *is*. [rememberBrownianJitter] keeps the whole (still-merged-or-splitting)
- * body trembling throughout, same as [IdleCell].
+ * two is what mitosis *is*. An even split ([MitosisShape.asymmetry] = 0) -- for a real cell's
+ * unequal division, see [BuddingCell].
  */
 @Composable
 fun DividingCell(request: ComposableRequest) {
+    DivisionCell(request, asymmetry = 0f)
+}
+
+/**
+ * Asymmetric division -- the same [MitosisShape]/act-state machinery as [DividingCell], with
+ * [BUD_ASYMMETRY] instead of an even split: the real way budding yeast divides (the mother buds
+ * off a visibly smaller daughter) and many stem cell divisions actually work (one daughter keeps
+ * the parent's size/identity, the other is smaller and differentiates) -- not every division is
+ * two equal halves.
+ */
+@Composable
+fun BuddingCell(request: ComposableRequest) {
+    DivisionCell(request, asymmetry = BUD_ASYMMETRY)
+}
+
+@Composable
+private fun DivisionCell(request: ComposableRequest, asymmetry: Float) {
     val tint = BacteriumHue.of(request.hue)
     val style = Locomotion.of(request.surface)
     val jitter = rememberBrownianJitter(jitterAmplitudePxFor(style.diameter))
@@ -136,7 +156,7 @@ fun DividingCell(request: ComposableRequest) {
                 modifier = Modifier
                     .size(style.diameter * 1.4f)
                     .brownianJitter(jitter)
-                    .clip(MitosisShape(separation = separation))
+                    .clip(MitosisShape(separation = separation, asymmetry = asymmetry))
                     .background(tint.base),
             )
         }
