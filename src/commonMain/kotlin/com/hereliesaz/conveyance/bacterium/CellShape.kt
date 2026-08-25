@@ -23,7 +23,7 @@ private const val CELL_POINTS = 32
  *   places a leading pseudopod at `pseudopodPhase * 2π`, with a smaller trailing bulge 180°
  *   behind it -- real amoeboid crawling: cytoplasm extends toward the leading edge, the trailing
  *   edge lags and follows.
- * - **[dentAngle]**/**[dentStrength]** carve an *inward* dent instead of a bulge -- the
+ * - **[dentAngle]** / **[dentStrength]** carve an *inward* dent instead of a bulge -- the
  *   phagocytic cup a cell's membrane forms while wrapping around something it's engulfing.
  *   `dentStrength = 0` (the default) leaves the outline undented, for a cell that isn't eating
  *   anything right now.
