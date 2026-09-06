@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/tokens/colors.css">
+<link rel="stylesheet" href="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/tokens/typography.css">
+<link rel="stylesheet" href="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/tokens/shapes.css">
+<link rel="stylesheet" href="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/tokens/motion.css">
+<link rel="stylesheet" href="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/styles.css">
+<script src="_ds/conveyance-design-system-f79d1f18-130a-428c-b8a1-d572ab3a41c6/_ds_bundle.js"></script>
+<style>
+body{margin:0}
+a{color:var(--h2g2-blue)}
+a:hover{color:var(--h2g2-blue-cap)}
+.bact-clickable{cursor:pointer}
+</style>
+</helmet>
+<div style="min-height:100vh;background:var(--surface-page);color:var(--ink);font-family:var(--font-body);padding:64px 48px 96px">
+<div style="max-width:1080px;margin:0 auto">
+
+<div class="h2g2-eyebrow" style="color:var(--text-muted);margin-bottom:12px">Conveyance — Composable Set</div>
+<div class="h2g2-hero" style="margin-bottom:16px">Bacterium</div>
+<div class="h2g2-lead" style="max-width:640px;margin-bottom:56px">Shape, movement, and interaction modeled on a single cell. An element's form is a motile body that never holds still; its verbs are reproduction and eating, not clicks and toasts.</div>
+
+<div class="h2g2-section" style="margin-bottom:8px">The membrane</div>
+<div class="h2g2-body" style="color:var(--text-muted);max-width:600px;margin-bottom:28px">A circle perturbed by two localized bulges — a leading pseudopod and a smaller trailing lag, each a Gaussian function of angular distance, not a uniform stretch. Thermal jitter runs underneath at all times, even here.</div>
+<div style="display:flex;align-items:center;gap:32px;margin-bottom:64px;flex-wrap:wrap">
+<div style="width:120px;height:120px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<div style="transform:translate({{ heroTx }}px,{{ heroTy }}px) rotate({{ heroRot }}deg)">
+<svg style="overflow:visible" width="96" height="96" viewBox="0 0 96 96"><path d="{{ heroCilia }}" stroke="var(--bacterium-algal-nucleus)" stroke-width="1.2" stroke-linecap="round" fill="none"></path><path d="{{ heroPath }}" fill="var(--bacterium-algal-base)"></path><path d="{{ heroOrganelles }}" fill="var(--bacterium-algal-nucleus)" fill-opacity="0.5"></path><path d="{{ heroNucleus }}" fill="var(--bacterium-algal-nucleus)"></path></svg>
+</div>
+</div>
+<div class="h2g2-body" style="color:var(--text-muted);max-width:420px">Leading bulge at the crawl direction, trailing bulge 180° behind — cytoplasm reaches forward, the rear lags and follows.</div>
+</div>
+
+<div class="h2g2-section" style="margin-bottom:8px">Locomotion</div>
+<div class="h2g2-body" style="color:var(--text-muted);max-width:600px;margin-bottom:28px">Three movement styles tune pseudopod strength and cycle speed. Click one to drive the acts below.</div>
+<div style="display:flex;gap:20px;margin-bottom:64px;flex-wrap:wrap">
+<sc-for list="{{ locomotionList }}" as="item" hint-placeholder-count="3">
+<div class="bact-clickable" onClick="{{ item.select }}" style="flex:1;min-width:150px;padding:20px;border-radius:var(--bacterium-blob);background:var(--surface-card);border:2px solid {{ item.borderColor }};display:flex;flex-direction:column;align-items:center;gap:12px">
+<div style="width:{{ item.diameter }}px;height:{{ item.diameter }}px;display:flex;align-items:center;justify-content:center">
+<div style="transform:translate({{ item.jx }}px,{{ item.jy }}px) rotate({{ item.rot }}deg)">
+<svg style="overflow:visible" width="{{ item.diameter }}" height="{{ item.diameter }}" viewBox="0 0 {{ item.diameter }} {{ item.diameter }}"><path d="{{ item.ciliaPath }}" stroke="var(--bacterium-slate-nucleus)" stroke-width="1" stroke-linecap="round" fill="none"></path><path d="{{ item.pathD }}" fill="var(--bacterium-slate-base)"></path><path d="{{ item.organellesPath }}" fill="var(--bacterium-slate-nucleus)" fill-opacity="0.5"></path><path d="{{ item.nucleusPath }}" fill="var(--bacterium-slate-nucleus)"></path></svg>
+</div>
+</div>
+<div class="h2g2-capsule">{{ item.label }}</div>
+<div class="h2g2-micro" style="color:var(--text-muted);text-align:center">{{ item.cycle }}ms cycle · {{ item.strengthPct }}% pseudopod</div>
+</div>
+</sc-for>
+</div>
+
+<div class="h2g2-section" style="margin-bottom:8px">Cytoplasm hues</div>
+<div class="h2g2-body" style="color:var(--text-muted);max-width:600px;margin-bottom:28px">Five translucent tints, each a base/nucleus pair — semi-transparent, since a real membrane reads as faintly see-through. Click one to recolor the acts below.</div>
+<div style="display:flex;gap:16px;margin-bottom:64px;flex-wrap:wrap">
+<sc-for list="{{ hueList }}" as="item" hint-placeholder-count="5">
+<div class="bact-clickable" onClick="{{ item.select }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px;border-radius:var(--bacterium-blob);border:2px solid {{ item.borderColor }};background:var(--surface-card)">
+<div style="transform:rotate({{ item.rot }}deg)">
+<svg style="overflow:visible" width="64" height="64" viewBox="0 0 64 64"><path d="{{ item.ciliaPath }}" stroke="{{ item.nucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path><path d="{{ item.pathD }}" fill="{{ item.baseVar }}"></path><path d="{{ item.nucleusPath }}" fill="{{ item.nucleusVar }}"></path></svg>
+</div>
+<div class="h2g2-capsule">{{ item.label }}</div>
+</div>
+</sc-for>
+</div>
+
+<div class="h2g2-section" style="margin-bottom:8px">Acts</div>
+<div class="h2g2-body" style="color:var(--text-muted);max-width:600px;margin-bottom:8px">Four templates share one act-state machine: click a cell to engage — the shape itself carries Yielding and Settled, no spinner layered on top.</div>
+<div style="color:var(--text-muted);margin-bottom:24px;font-family:monospace;font-size:12px">hue: "{{ hueLabel }}" · surface: "{{ surfaceLabel }}"</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;margin-bottom:64px">
+
+<div style="background:var(--surface-card);border-radius:var(--bacterium-blob);padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<div style="width:{{ idleD }}px;height:{{ idleD }}px;display:flex;align-items:center;justify-content:center">
+<div style="transform:translate({{ idleTx }}px,{{ idleTy }}px) rotate({{ idleRot }}deg)">
+<svg style="overflow:visible" width="{{ idleD }}" height="{{ idleD }}" viewBox="0 0 {{ idleD }} {{ idleD }}"><path d="{{ idleCilia }}" stroke="{{ activeNucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path><path d="{{ idlePathT }}" fill="{{ activeBaseVar }}"></path><path d="{{ idleOrganelles }}" fill="{{ activeNucleusVar }}" fill-opacity="0.5"></path><path d="{{ idleNucleus }}" fill="{{ activeNucleusVar }}"></path></svg>
+</div>
+</div>
+<div style="font-family:monospace;font-size:12px">bacterium.cell.idle</div>
+<div class="h2g2-micro" style="color:var(--text-muted);text-align:center">always crawling — never Ready and still</div>
+</div>
+
+<div class="bact-clickable" onClick="{{ engageDivide }}" style="background:var(--surface-card);border-radius:var(--bacterium-blob);padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<div style="width:{{ divideD }}px;height:{{ divideD }}px;display:flex;align-items:center;justify-content:center">
+<div style="transform:translate({{ divideTx }}px,{{ divideTy }}px) rotate({{ divideRot }}deg)">
+<svg style="overflow:visible" width="{{ divideD }}" height="{{ divideD }}" viewBox="0 0 {{ divideD }} {{ divideD }}">
+<path d="{{ divideMotherCiliaPath }}" stroke="{{ activeNucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ divideBudCiliaPath }}" stroke="{{ activeNucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ divideMotherPath }}" fill="{{ activeBaseVar }}"></path>
+<path d="{{ divideBudPath }}" fill="{{ activeBaseVar }}"></path>
+<path d="{{ divideMotherNucleus }}" fill="{{ activeNucleusVar }}"></path>
+<path d="{{ divideBudNucleus }}" fill="{{ activeNucleusVar }}"></path>
+<sc-if value="{{ divideNeckVisible }}">
+<rect x="{{ divideNeckX }}" y="{{ divideNeckY }}" width="{{ divideNeckW }}" height="{{ divideNeckH }}" fill="{{ activeBaseVar }}"></rect>
+</sc-if>
+</svg>
+</div>
+</div>
+<div style="font-family:monospace;font-size:12px">bacterium.cell.divide</div>
+<div class="{{ divideStateClass }}" style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">{{ divideState }}</div>
+</div>
+
+<div class="bact-clickable" onClick="{{ engageBud }}" style="background:var(--surface-card);border-radius:var(--bacterium-blob);padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<div style="width:{{ budD }}px;height:{{ budD }}px;display:flex;align-items:center;justify-content:center">
+<div style="transform:translate({{ budTx }}px,{{ budTy }}px) rotate({{ budRot }}deg)">
+<svg style="overflow:visible" width="{{ budD }}" height="{{ budD }}" viewBox="0 0 {{ budD }} {{ budD }}">
+<path d="{{ budMotherCiliaPath }}" stroke="{{ activeNucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ budBudCiliaPath }}" stroke="{{ activeNucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ budMotherPath }}" fill="{{ activeBaseVar }}"></path>
+<path d="{{ budBudPath }}" fill="{{ activeBaseVar }}"></path>
+<path d="{{ budMotherNucleus }}" fill="{{ activeNucleusVar }}"></path>
+<path d="{{ budBudNucleus }}" fill="{{ activeNucleusVar }}"></path>
+<sc-if value="{{ budNeckVisible }}">
+<rect x="{{ budNeckX }}" y="{{ budNeckY }}" width="{{ budNeckW }}" height="{{ budNeckH }}" fill="{{ activeBaseVar }}"></rect>
+</sc-if>
+</svg>
+</div>
+</div>
+<div style="font-family:monospace;font-size:12px">bacterium.cell.bud</div>
+<div class="{{ budStateClass }}" style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">{{ budState }}</div>
+</div>
+
+<div class="bact-clickable" onClick="{{ engageEat }}" style="background:var(--surface-card);border-radius:var(--bacterium-blob);padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<div style="width:{{ eatD }}px;height:{{ eatD }}px;display:flex;align-items:center;justify-content:center">
+<div style="transform:translate({{ eatTx }}px,{{ eatTy }}px) rotate({{ eatRot }}deg)">
+<svg style="overflow:visible" width="{{ eatD }}" height="{{ eatD }}" viewBox="0 0 {{ eatD }} {{ eatD }}">
+<path d="{{ eatCilia }}" stroke="{{ activeNucleusVar }}" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ eatPathT }}" fill="{{ activeBaseVar }}"></path>
+<sc-if value="{{ vacuoleShown }}">
+<path d="{{ vacuolePath }}" fill="{{ activeNucleusVar }}"></path>
+</sc-if>
+</svg>
+</div>
+</div>
+<div style="font-family:monospace;font-size:12px">bacterium.cell.eat</div>
+<div class="{{ eatStateClass }}" style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">{{ eatState }}</div>
+</div>
+
+</div>
+
+<div class="h2g2-section" style="margin-bottom:8px">Colony — predator &amp; prey</div>
+<div class="h2g2-body" style="color:var(--text-muted);max-width:600px;margin-bottom:8px">A predator alongside a real population of independently addressed prey. Click a prey cell to eat it; every {{ divideAfterEaten }} eaten earns the predator a division. Spawn more with the dashed cell.</div>
+<div class="h2g2-micro" style="color:var(--text-muted);margin-bottom:24px">eaten since last division: {{ eatenSinceDivide }}/{{ divideAfterEaten }} · divisions owed: {{ pendingDivisions }}</div>
+
+<div style="display:flex;align-items:center;gap:40px;flex-wrap:wrap;margin-bottom:56px">
+<div style="width:80px;height:80px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<div style="transform:translate({{ predJx }}px,{{ predJy }}px) rotate({{ predRot }}deg)">
+<sc-if value="{{ dividing }}" hint-placeholder-val="{{ false }}">
+<svg style="overflow:visible" width="{{ predatorDivideD }}" height="{{ predatorDivideD }}" viewBox="0 0 {{ predatorDivideD }} {{ predatorDivideD }}">
+<path d="{{ predMotherCiliaPath }}" stroke="var(--bacterium-algal-nucleus)" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ predBudCiliaPath }}" stroke="var(--bacterium-algal-nucleus)" stroke-width="1" stroke-linecap="round" fill="none"></path>
+<path d="{{ predMotherPath }}" fill="var(--bacterium-algal-base)"></path>
+<path d="{{ predBudPath }}" fill="var(--bacterium-algal-base)"></path>
+<path d="{{ predMotherNucleus }}" fill="var(--bacterium-algal-nucleus)"></path>
+<path d="{{ predBudNucleus }}" fill="var(--bacterium-algal-nucleus)"></path>
+</svg>
+</sc-if>
+<sc-if value="{{ notDividing }}" hint-placeholder-val="{{ true }}">
+<svg style="overflow:visible" width="{{ predatorD }}" height="{{ predatorD }}" viewBox="0 0 {{ predatorD }} {{ predatorD }}"><path d="{{ predatorCilia }}" stroke="var(--bacterium-algal-nucleus)" stroke-width="1" stroke-linecap="round" fill="none"></path><path d="{{ predatorPath }}" fill="var(--bacterium-algal-base)"></path><path d="{{ predatorOrganelles }}" fill="var(--bacterium-algal-nucleus)" fill-opacity="0.5"></path><path d="{{ predatorNucleus }}" fill="var(--bacterium-algal-nucleus)"></path></svg>
+</sc-if>
+</div>
+</div>
+
+<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+<sc-for list="{{ preyList }}" as="item" hint-placeholder-count="5">
+<div class="bact-clickable" onClick="{{ item.onClick }}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;opacity:{{ item.opacity }};transform:scale({{ item.scale }}) translate({{ item.jx }}px,{{ item.jy }}px) rotate({{ item.rot }}deg)">
+<svg style="overflow:visible" width="20" height="20" viewBox="0 0 20 20"><path d="{{ item.ciliaPath }}" stroke="{{ item.nucleusVar }}" stroke-width="0.8" stroke-linecap="round" fill="none"></path><path d="{{ item.pathD }}" fill="{{ item.baseVar }}"></path></svg>
+</div>
+</sc-for>
+<div class="bact-clickable" onClick="{{ spawnPrey }}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center">
+<svg style="overflow:visible" width="22" height="22" viewBox="0 0 22 22"><path d="{{ spawnCiliaPath }}" stroke="var(--bacterium-algal-nucleus)" stroke-width="0.8" stroke-linecap="round" fill="none"></path><path d="{{ spawnPath }}" fill="var(--bacterium-algal-base)"></path></svg>
+</div>
+</div>
+</div>
+
+<div style="border-top:1px solid var(--surface-card-border);padding-top:32px;margin-top:24px">
+<div class="h2g2-body" style="color:var(--text-muted);max-width:640px">Every shape above is redrawn from the same math the source library uses — Gaussian bumps for the crawl, two lobes and a shrinking neck for fission, a closing cup and a migrating vacuole for engulfment. Nothing here is a border-radius standing in for a real membrane.</div>
+</div>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;jitterEnabled&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;divideAfterEaten&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:3,&quot;min&quot;:1,&quot;max&quot;:8,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
+const HUES = ['algal', 'amber', 'coral', 'violet', 'slate'];
+const LOCOMOTION = {
+  amoeba: { strength: 0.24, cycle: 5200, d: 56, ciliaCount: 6, ciliaLen: 0.22, armCount: 6, armStrength: 0.24 },
+  paramecium: { strength: 0.10, cycle: 2600, d: 48, ciliaCount: 30, ciliaLen: 0.13, aspectX: 1.55, aspectY: 0.62, organelles: 6 },
+  flagellate: { strength: 0.32, cycle: 1800, d: 44, ciliaCount: 2, ciliaLen: 0.55 },
+};
+const BUD_ASYMMETRY = 0.6;
+
+function angDist(a, b) {
+  let d = (a - b) % (2 * Math.PI);
+  if (d > Math.PI) d -= 2 * Math.PI;
+  if (d < -Math.PI) d += 2 * Math.PI;
+  return d;
+}
+function gauss(d, w) { return Math.exp(-(d * d) / (2 * w * w)); }
+
+function hashSeed(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+  return h;
+}
+// A few low-frequency sine harmonics, phase-offset per cell identity -- an irregular,
+// never-quite-circular membrane wobble layered under the crawl/dent bumps, so every cell
+// reads as its own amorphous organism rather than a perturbed geometric circle.
+function noiseFor(theta, key) {
+  const h = hashSeed(key || 'cell');
+  const a = ((h % 1000) / 1000) * Math.PI * 2;
+  const b = (((h >> 3) % 1000) / 1000) * Math.PI * 2;
+  const c = (((h >> 7) % 1000) / 1000) * Math.PI * 2;
+  return 0.07 * Math.sin(3 * theta + a) + 0.05 * Math.sin(5 * theta + b) + 0.035 * Math.sin(7 * theta + c) + 0.02 * Math.sin(11 * theta + a + b);
+}
+
+function smoothClosedPath(pts) {
+  const n = pts.length;
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const mids = pts.map((p, i) => mid(p, pts[(i + 1) % n]));
+  let d = `M ${mids[n - 1][0].toFixed(2)} ${mids[n - 1][1].toFixed(2)} `;
+  for (let i = 0; i < n; i++) d += `Q ${pts[i][0].toFixed(2)} ${pts[i][1].toFixed(2)} ${mids[i][0].toFixed(2)} ${mids[i][1].toFixed(2)} `;
+  return d + 'Z';
+}
+
+function organicOutline(cx, cy, baseR, phase, strength, dentAngle, dentStrength, key, points, aspectX, aspectY, armCount, armStrength) {
+  points = points || 40;
+  aspectX = aspectX || 1; aspectY = aspectY || 1;
+  const lead = phase * 2 * Math.PI, trail = lead + Math.PI;
+  const ah = armCount ? hashSeed((key || 'arms') + '-arms') : 0;
+  const pts = [];
+  for (let i = 0; i < points; i++) {
+    const theta = 2 * Math.PI * i / points;
+    const leadB = strength ? gauss(angDist(theta, lead), 0.9) : 0;
+    const trailB = strength ? gauss(angDist(theta, trail), 1.3) * 0.5 : 0;
+    const dent = dentStrength ? gauss(angDist(theta, dentAngle || 0), 0.6) * dentStrength : 0;
+    const noise = noiseFor(theta, key);
+    let armBump = 0;
+    // A handful of radiating pseudopod arms, unevenly spaced and sized -- a real crawling amoeba
+    // reads as star-shaped, not a circle with one bulge.
+    for (let a = 0; armCount && a < armCount; a++) {
+      const seed = ((ah >> ((a * 4) % 24)) & 1023) / 1023;
+      const armAngle = (a / armCount) * 2 * Math.PI + (seed - 0.5) * 0.9;
+      const armWidth = 0.28 + seed * 0.16;
+      armBump += gauss(angDist(theta, armAngle), armWidth) * armStrength * (0.65 + seed * 0.6);
+    }
+    const factor = Math.max(1 + strength * (leadB + trailB) - dent + noise + armBump, 0.32);
+    const rx = baseR * aspectX * factor, ry = baseR * aspectY * factor;
+    pts.push([cx + rx * Math.cos(theta), cy + ry * Math.sin(theta)]);
+  }
+  return smoothClosedPath(pts);
+}
+
+function cellPath(size, phase, strength, dentAngle, dentStrength, key, points, aspectX, aspectY, armCount, armStrength) {
+  return organicOutline(size / 2, size / 2, size / 2, phase, strength, dentAngle, dentStrength, key, points, aspectX, aspectY, armCount, armStrength);
+}
+
+// A handful of internal organelle/vacuole specks -- ciliates read as granular and busy inside,
+// not a flat tint.
+function organelleDots(cx, cy, rx, ry, key, count) {
+  const h = hashSeed(key || 'organelles');
+  let d = '';
+  for (let i = 0; i < count; i++) {
+    const s1 = ((h >> (i * 3 % 24)) & 255) / 255;
+    const s2 = ((h >> ((i * 3 + 8) % 24)) & 255) / 255;
+    const s3 = ((h >> ((i * 3 + 16) % 24)) & 255) / 255;
+    const ang = s1 * Math.PI * 2;
+    const dist = 0.15 + s2 * 0.55;
+    const x = cx + Math.cos(ang) * rx * dist;
+    const y = cy + Math.sin(ang) * ry * dist;
+    const r = 1 + s3 * 1.5;
+    d += `M ${(x + r).toFixed(2)} ${y.toFixed(2)} a ${r.toFixed(2)} ${r.toFixed(2)} 0 1 0 ${(-2 * r).toFixed(2)} 0 a ${r.toFixed(2)} ${r.toFixed(2)} 0 1 0 ${(2 * r).toFixed(2)} 0 `;
+  }
+  return d;
+}
+
+// A membrane with no crawl/dent of its own -- still organically wobbled, for mitosis lobes and
+// the vacuole/nucleus, which read as blobs in the source (never a perfect circle either).
+function blobPath(cx, cy, r, key) {
+  return organicOutline(cx, cy, r, 0, 0, 0, 0, key, 28);
+}
+
+// A mitosis lobe reads as its own scalloped amoeba body (per the parent-cell/daughter-cell
+// reference), not a plain circle -- same star-arm treatment as a crawling amoeba, just static.
+function starLobe(cx, cy, r, key) {
+  return organicOutline(cx, cy, r, 0, 0, 0, 0, key, 28, 1, 1, 5, 0.16);
+}
+
+// Phagocytosis as two pseudopod arms curling around prey held at the mouth of a deep cup --
+// closer to a real amoeba's claw-like engulfment than a shallow uniform dent.
+function eatOutline(size, engulf, key) {
+  const cx = size / 2, cy = size / 2, baseR = size / 2;
+  const dentDepth = 0.5 * Math.min(1, engulf / 0.15 + 0.15);
+  const spread = (58 - 40 * Math.min(1, engulf / 0.85)) * Math.PI / 180;
+  const armStrength = Math.min(1, engulf / 0.4) * 0.5;
+  const points = 44;
+  const pts = [];
+  for (let i = 0; i < points; i++) {
+    const theta = 2 * Math.PI * i / points;
+    const dent = gauss(angDist(theta, 0), 0.55) * dentDepth;
+    const arm1 = gauss(angDist(theta, -spread), 0.28) * armStrength;
+    const arm2 = gauss(angDist(theta, spread), 0.28) * armStrength;
+    const noise = noiseFor(theta, key);
+    const r = Math.max(baseR * (1 - dent + arm1 + arm2 + noise), baseR * 0.28);
+    pts.push([cx + r * Math.cos(theta), cy + r * Math.sin(theta)]);
+  }
+  return smoothClosedPath(pts);
+}
+
+function mitosisParts(size, separation, asymmetry) {
+  const cx = size / 2, cy = size / 2, mergedR = size / 2;
+  const lobeR = mergedR * 0.45;
+  const maxOffset = size * 0.19;
+  const t = Math.min(1, Math.max(0, separation));
+  const asym = Math.min(1, Math.max(0, asymmetry || 0));
+  const offset = maxOffset * t;
+  const motherR = mergedR + (lobeR * (1 + asym * 0.3) - mergedR) * t;
+  const budR = mergedR + (lobeR * (1 - asym * 0.7) - mergedR) * t;
+  const motherC = [cx - offset, cy], budC = [cx + offset, cy];
+  let neck = null;
+  if (t < 0.6) {
+    const closeness = 1 - (t / 0.6);
+    const halfH = Math.min(motherR, budR) * closeness * 0.85;
+    if (halfH > 0.5) neck = { x: motherC[0], y: cy - halfH, w: budC[0] - motherC[0], h: halfH * 2 };
+  }
+  return { motherC, motherR, budC, budR, neck };
+}
+
+function jitterAmplitude(diameter) { return 2.5 * (48 / diameter); }
+function rotAmplitude(diameter) { return 5 * (48 / diameter); }
+
+// Short membrane hairs -- cilia/flagella a real cell uses to feel and move through fluid, not
+// just the pseudopod bulge. Evenly spaced around the perimeter, each with its own phase offset
+// so the beat sweeps around like a real ciliary metachronal wave rather than pulsing in unison.
+function ciliaPath(cx, cy, baseR, key, count, now, cycleMs, lenRatio, aspectX, aspectY) {
+  aspectX = aspectX || 1; aspectY = aspectY || 1;
+  const h = hashSeed(key || 'cilia');
+  const angleOffset = ((h % 1000) / 1000) * Math.PI * 2;
+  let d = '';
+  for (let i = 0; i < count; i++) {
+    const seed = ((h >> (i % 24)) & 1023) / 1023;
+    const angle = angleOffset + (2 * Math.PI * i) / count;
+    const wave = Math.sin((now / cycleMs) * 2 * Math.PI + seed * 2 * Math.PI + i * 0.9);
+    const len = baseR * lenRatio * (0.85 + seed * 0.3);
+    const ex = Math.cos(angle) * baseR * aspectX, ey = Math.sin(angle) * baseR * aspectY;
+    const mag = Math.sqrt(ex * ex + ey * ey) || 1;
+    const dx = ex / mag, dy = ey / mag;
+    const px = -dy, py = dx;
+    const bend = wave * len * 0.32;
+    const x1 = cx + ex * 0.95, y1 = cy + ey * 0.95;
+    const midDist = mag * 0.95 + len * 0.55, tipDist = mag * 0.95 + len;
+    const mx = cx + dx * midDist + px * bend * 0.6, my = cy + dy * midDist + py * bend * 0.6;
+    const x2 = cx + dx * tipDist + px * bend, y2 = cy + dy * tipDist + py * bend;
+    d += `M ${x1.toFixed(2)} ${y1.toFixed(2)} Q ${mx.toFixed(2)} ${my.toFixed(2)} ${x2.toFixed(2)} ${y2.toFixed(2)} `;
+  }
+  return d;
+}
+
+class Component extends DCLogic {
+  state = {
+    now: 0, hue: 'algal', surface: 'amoeba',
+    acts: {},
+    prey: [
+      { id: 1, hue: 'amber' }, { id: 2, hue: 'coral' }, { id: 3, hue: 'violet' },
+      { id: 4, hue: 'slate' }, { id: 5, hue: 'algal' },
+    ],
+    removing: {},
+    eatenSinceDivide: 0,
+    pendingDivisions: 0,
+    dividing: false,
+    dividingUntil: 0,
+    nextPreyId: 6,
+  };
+  jitters = {};
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const now = Date.now();
+      this.setState((prev) => this.computeNext(prev, now));
+    }, 45);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  computeNext(prev, now) {
+    const acts = {};
+    Object.keys(prev.acts).forEach((k) => {
+      const a = prev.acts[k];
+      if (a.state === 'yielding' && now - a.startedAt >= a.duration) acts[k] = { state: 'settled', settledAt: now };
+      else if (a.state === 'settled' && now - a.settledAt >= a.hold) acts[k] = { state: 'ready' };
+      else acts[k] = a;
+    });
+
+    let prey = prev.prey, eatenSinceDivide = prev.eatenSinceDivide, pendingDivisions = prev.pendingDivisions;
+    const stillRemoving = {};
+    const removedIds = [];
+    Object.keys(prev.removing).forEach((id) => {
+      if (now - prev.removing[id] >= 320) removedIds.push(Number(id));
+      else stillRemoving[id] = prev.removing[id];
+    });
+    if (removedIds.length > 0) {
+      prey = prey.filter((p) => !removedIds.includes(p.id));
+      const threshold = this.props.divideAfterEaten || 3;
+      eatenSinceDivide += removedIds.length;
+      const earned = Math.floor(eatenSinceDivide / threshold);
+      if (earned > 0) { eatenSinceDivide -= earned * threshold; pendingDivisions += earned; }
+    }
+
+    let dividing = prev.dividing, dividingUntil = prev.dividingUntil;
+    if (!dividing && pendingDivisions > 0) { dividing = true; dividingUntil = now + 1200; pendingDivisions -= 1; }
+    else if (dividing && now >= dividingUntil) { dividing = false; }
+
+    return { now, acts, prey, removing: stillRemoving, eatenSinceDivide, pendingDivisions, dividing, dividingUntil };
+  }
+
+  engage(key, duration, hold) {
+    const a = this.state.acts[key];
+    if (a && a.state && a.state !== 'ready') return;
+    this.setState((prev) => ({ acts: { ...prev.acts, [key]: { state: 'yielding', startedAt: Date.now(), duration, hold } } }));
+  }
+  eatPrey(id) {
+    if (this.state.removing[id]) return;
+    this.setState((prev) => ({ removing: { ...prev.removing, [id]: Date.now() } }));
+  }
+  spawnPrey() {
+    this.setState((prev) => ({
+      prey: [...prev.prey, { id: prev.nextPreyId, hue: HUES[Math.floor(Math.random() * HUES.length)] }],
+      nextPreyId: prev.nextPreyId + 1,
+    }));
+  }
+  selectHue(h) { this.setState({ hue: h }); }
+  selectSurface(s) { this.setState({ surface: s }); }
+
+  stepJitter(key, now, amplitude) {
+    if (this.props.jitterEnabled === false) return { x: 0, y: 0 };
+    let j = this.jitters[key];
+    if (!j) { j = { x: 0, y: 0, tx: 0, ty: 0, start: now, dur: 120 }; this.jitters[key] = j; }
+    let elapsed = now - j.start;
+    if (elapsed >= j.dur) {
+      j.x = j.tx; j.y = j.ty;
+      j.tx = (Math.random() * 2 - 1) * amplitude;
+      j.ty = (Math.random() * 2 - 1) * amplitude;
+      j.start = now; j.dur = 80 + Math.random() * 100;
+      elapsed = 0;
+    }
+    const t = j.dur > 0 ? elapsed / j.dur : 1;
+    return { x: j.x + (j.tx - j.x) * t, y: j.y + (j.ty - j.y) * t };
+  }
+
+  actProgress(key) {
+    const a = this.state.acts[key];
+    if (!a || !a.state || a.state === 'ready') return { state: 'ready', progress: 0 };
+    if (a.state === 'yielding') return { state: 'yielding', progress: Math.min(1, (this.state.now - a.startedAt) / a.duration) };
+    return { state: 'settled', progress: 1 };
+  }
+
+  renderVals() {
+    const now = this.state.now;
+    const hue = this.state.hue;
+    const surface = this.state.surface;
+    const spec = LOCOMOTION[surface];
+    const divideAfterEaten = this.props.divideAfterEaten || 3;
+
+    const idlePhase0 = (now % LOCOMOTION.amoeba.cycle) / LOCOMOTION.amoeba.cycle;
+    const heroJ = this.stepJitter('hero', now, jitterAmplitude(96));
+    const heroRot = this.stepJitter('hero-rot', now, rotAmplitude(96)).x;
+    const heroPath = cellPath(96, idlePhase0, 0.22, 0, 0, 'hero');
+    const heroCilia = ciliaPath(48, 48, 48, 'hero-cilia', 6, now, 900, 0.22);
+    const heroNucleus = blobPath(48, 48, 9, 'hero-nucleus');
+    const heroOrganelles = organelleDots(48, 48, 34, 34, 'hero-org', 4);
+
+    const locomotionList = ['amoeba', 'paramecium', 'flagellate'].map((k) => {
+      const s = LOCOMOTION[k];
+      const phase = (now % s.cycle) / s.cycle;
+      const j = this.stepJitter('loco-' + k, now, jitterAmplitude(s.d));
+      const rot = this.stepJitter('loco-' + k + '-rot', now, rotAmplitude(s.d)).x;
+      const ax = s.aspectX || 1, ay = s.aspectY || 1;
+      return {
+        key: k, label: k[0].toUpperCase() + k.slice(1), diameter: s.d, cycle: s.cycle,
+        strengthPct: Math.round(s.strength * 100), pathD: cellPath(s.d, phase, s.strength, 0, 0, 'loco-' + k, undefined, ax, ay, s.armCount, s.armStrength),
+        ciliaPath: ciliaPath(s.d / 2, s.d / 2, s.d / 2, 'loco-' + k + '-cilia', s.ciliaCount, now, s.cycle / 4, s.ciliaLen, ax, ay),
+        organellesPath: organelleDots(s.d / 2, s.d / 2, (s.d / 2) * ax * 0.7, (s.d / 2) * ay * 0.7, 'loco-' + k + '-org', s.organelles || 4),
+        nucleusPath: blobPath(s.d / 2, s.d / 2, s.d * 0.09, 'loco-' + k + '-nucleus'),
+        jx: j.x, jy: j.y, rot, borderColor: k === surface ? 'var(--ink)' : 'transparent',
+        select: () => this.selectSurface(k),
+      };
+    });
+
+    const hueList = HUES.map((h) => ({
+      key: h, label: h[0].toUpperCase() + h.slice(1),
+      baseVar: `var(--bacterium-${h}-base)`, nucleusVar: `var(--bacterium-${h}-nucleus)`,
+      pathD: cellPath(64, 0.15, 0.22, 0, 0, 'hue-' + h),
+      nucleusPath: blobPath(42, 40, 10, 'hue-nucleus-' + h),
+      ciliaPath: ciliaPath(32, 32, 32, 'hue-' + h + '-cilia', 6, now, 900, 0.2),
+      rot: this.stepJitter('hue-' + h + '-rot', now, rotAmplitude(64)).x,
+      borderColor: h === hue ? 'var(--ink)' : 'transparent',
+      select: () => this.selectHue(h),
+    }));
+
+    const activeBaseVar = `var(--bacterium-${hue}-base)`;
+    const activeNucleusVar = `var(--bacterium-${hue}-nucleus)`;
+
+    const idleD = spec.d;
+    const idlePhase = (now % spec.cycle) / spec.cycle;
+    const idleJ = this.stepJitter('t-idle', now, jitterAmplitude(idleD));
+    const idleRot = this.stepJitter('t-idle-rot', now, rotAmplitude(idleD)).x;
+    const idleAx = spec.aspectX || 1, idleAy = spec.aspectY || 1;
+    const idlePathT = cellPath(idleD, idlePhase, spec.strength, 0, 0, 'tmpl-idle', undefined, idleAx, idleAy, spec.armCount, spec.armStrength);
+    const idleCilia = ciliaPath(idleD / 2, idleD / 2, idleD / 2, 'tmpl-idle-cilia', spec.ciliaCount, now, spec.cycle / 4, spec.ciliaLen, idleAx, idleAy);
+    const idleOrganelles = organelleDots(idleD / 2, idleD / 2, (idleD / 2) * idleAx * 0.7, (idleD / 2) * idleAy * 0.7, 'tmpl-idle-org', spec.organelles || 4);
+    const idleNucleus = blobPath(idleD / 2, idleD / 2, idleD * 0.1, 'tmpl-idle-nucleus');
+
+    const divideKey = 't-divide';
+    const divideAP = this.actProgress(divideKey);
+    const divideSep = divideAP.state === 'settled' ? 1 : divideAP.progress;
+    const divideD = spec.d * 1.4;
+    const divideJ = this.stepJitter(divideKey, now, jitterAmplitude(divideD));
+    const divideRot = this.stepJitter(divideKey + '-rot', now, rotAmplitude(divideD)).x;
+    const divideParts = mitosisParts(divideD, divideSep, 0);
+    const dn = divideParts.neck;
+    const divideMotherCiliaPath = ciliaPath(divideParts.motherC[0], divideParts.motherC[1], divideParts.motherR, 'divide-mother-cilia', Math.round(spec.ciliaCount * 0.7), now, spec.cycle / 4, spec.ciliaLen);
+    const divideBudCiliaPath = ciliaPath(divideParts.budC[0], divideParts.budC[1], divideParts.budR, 'divide-bud-cilia', Math.round(spec.ciliaCount * 0.7), now, spec.cycle / 4, spec.ciliaLen);
+    const divideMotherNucleus = blobPath(divideParts.motherC[0], divideParts.motherC[1], divideParts.motherR * 0.38, 'divide-mother-nuc');
+    const divideBudNucleus = blobPath(divideParts.budC[0], divideParts.budC[1], divideParts.budR * 0.38, 'divide-bud-nuc');
+
+    const budKey = 't-bud';
+    const budAP = this.actProgress(budKey);
+    const budSep = budAP.state === 'settled' ? 1 : budAP.progress;
+    const budD = spec.d * 1.4;
+    const budJ = this.stepJitter(budKey, now, jitterAmplitude(budD));
+    const budRot = this.stepJitter(budKey + '-rot', now, rotAmplitude(budD)).x;
+    const budParts = mitosisParts(budD, budSep, BUD_ASYMMETRY);
+    const bn = budParts.neck;
+    const budMotherCiliaPath = ciliaPath(budParts.motherC[0], budParts.motherC[1], budParts.motherR, 'bud-mother-cilia', Math.round(spec.ciliaCount * 0.7), now, spec.cycle / 4, spec.ciliaLen);
+    const budBudCiliaPath = ciliaPath(budParts.budC[0], budParts.budC[1], budParts.budR, 'bud-bud-cilia', Math.round(spec.ciliaCount * 0.7), now, spec.cycle / 4, spec.ciliaLen);
+    const budMotherNucleus = blobPath(budParts.motherC[0], budParts.motherC[1], budParts.motherR * 0.38, 'bud-mother-nuc');
+    const budBudNucleus = blobPath(budParts.budC[0], budParts.budC[1], budParts.budR * 0.38, 'bud-bud-nuc');
+
+    const eatKey = 't-eat';
+    const eatAP = this.actProgress(eatKey);
+    const engulf = eatAP.state === 'settled' ? 1 : eatAP.progress;
+    const eatD = spec.d;
+    const eatJ = this.stepJitter(eatKey, now, jitterAmplitude(eatD));
+    const eatRot = this.stepJitter(eatKey + '-rot', now, rotAmplitude(eatD)).x;
+    const eatPathT = engulf > 0 ? eatOutline(eatD, engulf, 'tmpl-eat') : cellPath(eatD, 0, spec.strength * 0.4, 0, 0, 'tmpl-eat');
+    const eatCilia = ciliaPath(eatD / 2, eatD / 2, eatD / 2, 'tmpl-eat-cilia', spec.ciliaCount, now, spec.cycle / 4, spec.ciliaLen * 0.7);
+    const vacuoleDiameter = eatD * (0.4 - 0.08 * engulf);
+    const restDistance = (eatD / 2) * (0.62 - 0.1 * engulf);
+
+    const predatorD = LOCOMOTION.paramecium.d;
+    const predJ = this.stepJitter('predator', now, jitterAmplitude(predatorD));
+    const predRot = this.stepJitter('predator-rot', now, rotAmplitude(predatorD)).x;
+    const predPhase = (now % LOCOMOTION.paramecium.cycle) / LOCOMOTION.paramecium.cycle;
+    const predatorDivideD = predatorD * 1.4;
+    const predParts = mitosisParts(predatorDivideD, 1, BUD_ASYMMETRY);
+    const predAx = LOCOMOTION.paramecium.aspectX, predAy = LOCOMOTION.paramecium.aspectY;
+    const eatingProgress = Object.values(this.state.removing).reduce((m, t) => Math.max(m, Math.min(1, (now - t) / 320)), 0);
+    const predatorPath = eatingProgress > 0
+      ? eatOutline(predatorD, eatingProgress, 'predator-eat')
+      : cellPath(predatorD, predPhase, LOCOMOTION.paramecium.strength, 0, 0, 'predator', undefined, predAx, predAy);
+    const predatorCilia = ciliaPath(predatorD / 2, predatorD / 2, predatorD / 2, 'predator-cilia', LOCOMOTION.paramecium.ciliaCount, now, LOCOMOTION.paramecium.cycle / 4, LOCOMOTION.paramecium.ciliaLen, predAx, predAy);
+    const predatorOrganelles = organelleDots(predatorD / 2, predatorD / 2, (predatorD / 2) * predAx * 0.7, (predatorD / 2) * predAy * 0.7, 'predator-org', LOCOMOTION.paramecium.organelles);
+    const predatorNucleus = blobPath(predatorD / 2, predatorD / 2, predatorD * 0.09, 'predator-nucleus');
+    const predMotherCiliaPath = ciliaPath(predParts.motherC[0], predParts.motherC[1], predParts.motherR, 'pred-mother-cilia', 14, now, LOCOMOTION.paramecium.cycle / 4, LOCOMOTION.paramecium.ciliaLen);
+    const predBudCiliaPath = ciliaPath(predParts.budC[0], predParts.budC[1], predParts.budR, 'pred-bud-cilia', 10, now, LOCOMOTION.paramecium.cycle / 4, LOCOMOTION.paramecium.ciliaLen);
+
+    const preyList = this.state.prey.map((p) => {
+      const removeStart = this.state.removing[p.id];
+      const fading = !!removeStart;
+      const fadeT = fading ? Math.min(1, (now - removeStart) / 320) : 0;
+      const j = this.stepJitter('prey-' + p.id, now, jitterAmplitude(20));
+      const rot = this.stepJitter('prey-' + p.id + '-rot', now, rotAmplitude(20)).x;
+      return {
+        id: p.id, key: 'prey-' + p.id, baseVar: `var(--bacterium-${p.hue}-base)`,
+        nucleusVar: `var(--bacterium-${p.hue}-nucleus)`,
+        pathD: cellPath(20, 0, 0.15, 0, 0, 'prey-' + p.id),
+        ciliaPath: ciliaPath(10, 10, 10, 'prey-' + p.id + '-cilia', 5, now, 700, 0.28),
+        jx: fading ? 0 : j.x, jy: fading ? 0 : j.y, rot: fading ? 0 : rot,
+        opacity: fading ? 1 - fadeT : 1, scale: fading ? 1 - fadeT * 0.6 : 1,
+        onClick: () => this.eatPrey(p.id),
+      };
+    });
+
+    return {
+      heroPath, heroTx: heroJ.x, heroTy: heroJ.y, heroRot, heroCilia, heroNucleus, heroOrganelles,
+      locomotionList, hueList, hueLabel: hue, surfaceLabel: surface,
+      activeBaseVar, activeNucleusVar,
+
+      idleD, idlePathT, idleTx: idleJ.x, idleTy: idleJ.y, idleRot, idleCilia, idleOrganelles, idleNucleus,
+
+      divideD, divideTx: divideJ.x, divideTy: divideJ.y, divideRot,
+      divideMotherCiliaPath, divideBudCiliaPath,
+      divideMotherPath: starLobe(divideParts.motherC[0], divideParts.motherC[1], divideParts.motherR, 'divide-mother'),
+      divideBudPath: starLobe(divideParts.budC[0], divideParts.budC[1], divideParts.budR, 'divide-bud'),
+      divideMotherNucleus, divideBudNucleus,
+      divideNeckVisible: !!dn, divideNeckX: dn ? dn.x : 0, divideNeckY: dn ? dn.y : 0, divideNeckW: dn ? dn.w : 0, divideNeckH: dn ? dn.h : 0,
+      divideState: divideAP.state, divideStateClass: divideAP.state === 'yielding' ? 'state-yielding' : '',
+      engageDivide: () => this.engage(divideKey, 1100, 1600),
+
+      budD, budTx: budJ.x, budTy: budJ.y, budRot,
+      budMotherCiliaPath, budBudCiliaPath,
+      budMotherPath: starLobe(budParts.motherC[0], budParts.motherC[1], budParts.motherR, 'bud-mother'),
+      budBudPath: starLobe(budParts.budC[0], budParts.budC[1], budParts.budR, 'bud-bud'),
+      budMotherNucleus, budBudNucleus,
+      budNeckVisible: !!bn, budNeckX: bn ? bn.x : 0, budNeckY: bn ? bn.y : 0, budNeckW: bn ? bn.w : 0, budNeckH: bn ? bn.h : 0,
+      budState: budAP.state, budStateClass: budAP.state === 'yielding' ? 'state-yielding' : '',
+      engageBud: () => this.engage(budKey, 1100, 1600),
+
+      eatD, eatPathT, eatTx: eatJ.x, eatTy: eatJ.y, eatRot, eatCilia, eatState: eatAP.state,
+      eatStateClass: eatAP.state === 'yielding' ? 'state-yielding' : '',
+      vacuolePath: engulf > 0.03 ? blobPath(eatD / 2 + restDistance, eatD / 2, vacuoleDiameter / 2, 'eat-vacuole') : '',
+      vacuoleShown: engulf > 0.03,
+      engageEat: () => this.engage(eatKey, 1300, 1600),
+
+      predatorD, predJx: predJ.x, predJy: predJ.y, predRot, predatorPath, predatorCilia, predatorOrganelles, predatorNucleus,
+      spawnPath: eatOutline(22, 0.35, 'spawn-cell'),
+      spawnCiliaPath: ciliaPath(11, 11, 11, 'spawn-cilia', 5, now, 700, 0.22),
+      predatorDivideD,
+      predMotherPath: starLobe(predParts.motherC[0], predParts.motherC[1], predParts.motherR, 'pred-mother'),
+      predBudPath: starLobe(predParts.budC[0], predParts.budC[1], predParts.budR, 'pred-bud'),
+      predMotherCiliaPath, predBudCiliaPath,
+      predMotherNucleus: blobPath(predParts.motherC[0], predParts.motherC[1], predParts.motherR * 0.38, 'pred-mother-nuc'),
+      predBudNucleus: blobPath(predParts.budC[0], predParts.budC[1], predParts.budR * 0.38, 'pred-bud-nuc'),
+      dividing: this.state.dividing, notDividing: !this.state.dividing,
+      preyList, spawnPrey: () => this.spawnPrey(),
+      eatenSinceDivide: this.state.eatenSinceDivide, pendingDivisions: this.state.pendingDivisions,
+      divideAfterEaten,
+    };
+  }
+}
+</script>
+</body>
+</html>
