@@ -50,7 +50,9 @@ publishing {
         pom {
             name.set("Conveyance Bacterium")
             description.set(
-                "Concept not yet defined.",
+                "The Bacterium style for Conveyance: shape, movement and interaction modeled on " +
+                    "single-celled organisms -- a motile cell body whose verbs are reproduction " +
+                    "(mitosis) and eating (phagocytosis).",
             )
         }
     }

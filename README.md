@@ -80,8 +80,16 @@ Example composable manifest referencing this library:
 - **`PredatorColony`/`PreyRequest`** (`Colony.kt`) -- genuine two-body predator/prey, built on
   Conveyance's own `Collection` primitive: a predator alongside a real population of independently
   addressed prey, each carrying its own `Act`. Eating one is the host removing its `SubjectId`
-  from the `prey` list it passes in; `Collection` renders the framework's own Ghost residue for
-  it. The predator itself reacts to eating: consuming `divideAfterEaten` (default 3) prey --
+  from the `prey` list it passes in; `Collection` renders the framework's own Ghost residue in the
+  slot it held. Removal alone does not produce that residue -- `Collection` only keeps a departed
+  subject's slot open while `Ghosts.holds(it)` is true -- so this library calls
+  `LocalGhosts.current.leave(prey.act, at = subjectElement(prey.subject))` as the prey is engaged,
+  before the host's own removal lands. That is the ordering `conveyance-demo`'s own `Gallery.kt`
+  uses, where `ghosts.leave(discard, at = tray)` is the first statement of the destroy act's body;
+  a host owns `PreyRequest.act` and this library cannot reach inside its body, so the call is made
+  at the control instead. A prey whose act is an `Act.destroyIrreversibly` -- genuinely digested
+  beyond recall -- honestly leaves no residue rather than throwing, and a refused eating withdraws
+  the residue it recorded. The predator itself reacts to eating: consuming `divideAfterEaten` (default 3) prey --
   detected as `prey` shrinking across recompositions, since this library never removes anything
   itself -- switches the predator's own rendering from `IdleCell` to `bacterium.cell.bud`'s
   `BuddingCell` for 1.2s, the real link between eating and reproduction: consumed biomass has to
@@ -120,6 +128,20 @@ of subjects present rather than a size delta, every division a burst earns is qu
 lost, and each queued division gets its own full display window. `bacterium.cell.eat`'s cup-dent
 and vacuole windows overlapped for 20% of the engulf range, contradicting its own "cup closes,
 then vacuole appears" doc comment -- both now share the same 0.5 boundary.
+
+A later audit found three more, all now fixed. The Ghost residue this file documented never
+actually fired: nothing here ever called `Ghosts.leave`, which is the step `Collection` requires
+before a removed subject resolves to a `Slot.Gone` rather than simply vanishing -- wired in at
+`PreyBlob`'s engagement, as described above. `.github/workflows/android-ci.yml` was an unmodified
+Android-*application* CI template that could not pass on a KMP library: it ran `./gradlew test`
+(no such task here -- the real ones are `desktopTest` and the `allTests` aggregate) and released
+an APK out of an `app/` module this repository does not have. It is now `.github/workflows/ci.yml`,
+running `allTests` and then `assemble`, with no release job, since consumers resolve this artifact
+from JitPack off a commit rather than from anything CI produces. And the published POM's
+`description` still read "Concept not yet defined." while this README described the concept in
+full; it now says what the library is. `ColonyTest.kt` covers the residue call and the
+eaten-count/queued-division bookkeeping, which had no dedicated test despite being the
+most-repaired logic in the repository.
 
 ## Using it
 
