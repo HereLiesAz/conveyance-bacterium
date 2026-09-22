@@ -8,10 +8,13 @@ name: CI
 # own runners rather than here, so there is no release artifact for this workflow to produce.
 
 on:
+  # Pushes to main, and every pull request. Not `push: [**]` as well: with both, a branch that
+  # has a PR open runs this workflow twice on the same commit, and the concurrency group below
+  # cancels one of the two -- which reads on the PR as a cancelled check rather than as a
+  # duplicate.
   push:
-    branches: [ "**" ]
-  pull_request:
     branches: [ "main" ]
+  pull_request:
   workflow_dispatch:
 
 concurrency:
