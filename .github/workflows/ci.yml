@@ -42,7 +42,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: false
-          dependency-graph: generate-submit-and-upload
+          # Not generate-submit-and-upload: submitting a dependency snapshot needs
+          # `contents: write`, which this workflow deliberately does not take (it publishes
+          # nothing). Left on, it only logs `Resource not accessible by integration` every run.
+          dependency-graph: disabled
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
