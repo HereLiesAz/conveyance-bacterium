@@ -64,6 +64,13 @@ publishing {
                     "single-celled organisms -- a motile cell body whose verbs are reproduction " +
                     "(mitosis) and eating (phagocytosis).",
             )
+            url.set("https://github.com/HereLiesAz/conveyance-bacterium")
+            licenses {
+                license {
+                    name.set("Apache License 2.0")
+                    url.set("https://www.apache.org/licenses/LICENSE-2.0")
+                }
+            }
         }
     }
 }
